@@ -1,16 +1,13 @@
-﻿using Npgsql;
-using System;
-using System.IO;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace WindowsFormsApp2
 {
     //
     public static class FileService
     {
+        static string path = null;
         public static string SaveFile()
         {
-            string path = null;
             using (SaveFileDialog saveFileDialog1 = new SaveFileDialog())
             {
                 saveFileDialog1.Filter = "xml files|*.xml";
@@ -26,7 +23,6 @@ namespace WindowsFormsApp2
 
         public static string OpenFile()
         {
-            string path = null;
             using (OpenFileDialog openFileDialog1 = new OpenFileDialog())
             {
                 openFileDialog1.Filter = "txt files|*.txt";

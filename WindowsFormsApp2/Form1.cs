@@ -1,11 +1,7 @@
-﻿using Npgsql;
-using System;
+﻿using System;
 using System.Configuration;
 using System.Data;
-using System.IO;
-using System.Linq;
 using System.Windows.Forms;
-using System.Xml;
 
 namespace WindowsFormsApp2
 {
@@ -13,14 +9,7 @@ namespace WindowsFormsApp2
     {
         private DataSet ds = new DataSet();
         private DataTable dt = new DataTable();
-        //string queryCeate = @"CREATE TABLE IF NOT EXISTS Proverka (Id INT PRIMARY KEY, ""a"" NCHAR(100),
-								//	 ""b"" NCHAR(100) ,""v"" NCHAR(100) ,""g"" NCHAR(100) ,""2"" NCHAR(100) ,
-								//	""3"" NCHAR(100) ,""4"" NCHAR(100) ,""5"" NCHAR(100) ,""6"" NCHAR(100) ,
-								//	""7"" NCHAR(100) ,""8"" NCHAR(100) ,""9"" NCHAR(100) ,""10"" NCHAR(100) ,""11"" NCHAR(100) ,
-								//	 ""12"" NCHAR(100) ,""13"" NCHAR(100) ,""14"" NCHAR(100))";
-
-        string myConnectionString = ConfigurationManager.ConnectionStrings["localDBConnection"].ConnectionString;
-        string querySelect = @"SELECT * FROM public.proverka";
+        private readonly string myConnectionString = ConfigurationManager.ConnectionStrings["localDBConnection"].ConnectionString;
 
         public ProgramDebt()
         {
@@ -29,8 +18,7 @@ namespace WindowsFormsApp2
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //DBHelper.CreateCommand(myConnectionString, queryCeate);
-            DBHelper.SelectDB(querySelect, myConnectionString, ds, dt, dataGridView1);
+            DBHelper.CreateObjectDB(myConnectionString);
         }
 
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)
@@ -72,35 +60,35 @@ namespace WindowsFormsApp2
 
             if (path != null)
             {
-                DBHelper.InsertIntoDB(path, myConnectionString);
+                DBHelper.InsertIntoDB(myConnectionString, path);
+                DBHelper.SelectDB(myConnectionString, ds, dt, dataGridView1);
             }
         }
 
         private void Search_button_Click(object sender, EventArgs e)
         {
-            (dataGridView1.DataSource as DataTable).DefaultView.RowFilter =
-                           String.Format("(a like '{0}%') or (b like '{0}%') or (v like '{0}%') or (g like '{0}%')", textBoxSearch.Text.Trim());
-        }
-
-        private void Search_Click(object sender, EventArgs e)
-        {
-
+            if (dataGridView1.DataSource is DataTable d)
+            {
+                string searchValue = textBoxSearch.Text.Trim();
+                d.DefaultView.RowFilter =
+                           $"(a like '{searchValue}%') or (b like '{searchValue}%') or (v like '{searchValue}%') or (g like '{searchValue}%')";
+            }
         }
 
         private void Select_button_Click(object sender, EventArgs e)
         {
-            DBHelper.SelectDB(querySelect, myConnectionString, ds, dt, dataGridView1);
+            DBHelper.SelectDB(myConnectionString, ds, dt, dataGridView1);
         }
 
         private void Save_report_button_Click(object sender, EventArgs e)
         {
-            var path = FileService.SaveFile();
+            string path = FileService.SaveFile();
             dataGridView1.CreaterXML(path);      
         }
 
         private void Save_button_Click(object sender, EventArgs e)
         {
-            DBHelper.UpdateDB(dataGridView1, myConnectionString, querySelect);
+            DBHelper.UpdateDB(myConnectionString, dataGridView1);
         }
     }
 }

@@ -103,17 +103,16 @@
             this.Search.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Search.Location = new System.Drawing.Point(12, 22);
             this.Search.Name = "Search";
-            this.Search.Size = new System.Drawing.Size(62, 29);
+            this.Search.Size = new System.Drawing.Size(73, 29);
             this.Search.TabIndex = 6;
             this.Search.Text = "Search";
-            this.Search.Click += new System.EventHandler(this.Search_Click);
             // 
             // textBoxSearch
             // 
-            this.textBoxSearch.Location = new System.Drawing.Point(80, 22);
+            this.textBoxSearch.Location = new System.Drawing.Point(91, 22);
             this.textBoxSearch.Multiline = true;
             this.textBoxSearch.Name = "textBoxSearch";
-            this.textBoxSearch.Size = new System.Drawing.Size(368, 29);
+            this.textBoxSearch.Size = new System.Drawing.Size(357, 29);
             this.textBoxSearch.TabIndex = 7;
             // 
             // Search_button
