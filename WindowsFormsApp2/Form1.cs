@@ -19,6 +19,7 @@ namespace WindowsFormsApp2
         private void Form1_Load(object sender, EventArgs e)
         {
             DBHelper.CreateObjectDB(myConnectionString);
+            DBHelper.SelectDB(myConnectionString, ds, dt, dataGridView1);
         }
 
         private void dataGridView1_KeyDown(object sender, KeyEventArgs e)

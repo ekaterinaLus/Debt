@@ -15,18 +15,26 @@ namespace WindowsFormsApp2
 
         public static void SelectDB(string connectionString, DataSet ds, DataTable dt, DataGridView dataGridView1)
         {
-            string querySelect = $"Select * from \"{tableName}\"";
-
-            using (NpgsqlConnection connection = new NpgsqlConnection(
-                       connectionString))
+            try
             {
-                connection.Open();
-                NpgsqlDataAdapter da = new NpgsqlDataAdapter(querySelect, connection);
-                ds.Reset();
-                da.Fill(ds);
-                dt = ds.Tables[0];
-                dataGridView1.DataSource = dt;
-                connection.Close();
+                string querySelect = $"Select * from \"{tableName}\"";
+
+                using (NpgsqlConnection connection = new NpgsqlConnection(
+                           connectionString))
+                {
+                    connection.Open();
+                    NpgsqlDataAdapter da = new NpgsqlDataAdapter(querySelect, connection);
+                    ds.Reset();
+                    da.Fill(ds);
+                    dt = ds.Tables[0];
+                    dataGridView1.DataSource = dt;
+                    connection.Close();
+                }
+            }
+
+            catch 
+            {
+                MessageBox.Show("Отсутствуют загруженные файлы");
             }
         }
 
@@ -54,8 +62,11 @@ namespace WindowsFormsApp2
                             CreateStructTable(connectionString, splitStrings.Length - 1);
                             string valueName = string.Join(",", splitStrings);
                             columnName = string.Join(",", columns).Replace("'", "\"");
-                            string query = $"INSERT INTO \"{tableName}\" ({columnName}) Values({valueName})";
-                            CommandExecution(connectionString, query);
+                            if(!string.IsNullOrEmpty(valueName))
+                            {
+                                string query = $"INSERT INTO \"{tableName}\" ({columnName}) Values({valueName})";
+                                CommandExecution(connectionString, query);
+                            }
                         }
                     }
                 }
