@@ -6,11 +6,11 @@ namespace WindowsFormsApp2
     public static class FileService
     {
         static string path = null;
-        public static string SaveFile()
+        public static string SaveFile(string format)
         {
             using (SaveFileDialog saveFileDialog1 = new SaveFileDialog())
             {
-                saveFileDialog1.Filter = "xml files|*.xml";
+                saveFileDialog1.Filter = $"{format} files|*.{format}";
 
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {

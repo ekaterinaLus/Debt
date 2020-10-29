@@ -43,6 +43,7 @@
             this.Search_button = new System.Windows.Forms.Button();
             this.Select_button = new System.Windows.Forms.Button();
             this.Save_report_button = new System.Windows.Forms.Button();
+            this.Save_report_Excel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -137,19 +138,30 @@
             // 
             // Save_report_button
             // 
-            this.Save_report_button.Location = new System.Drawing.Point(893, 316);
+            this.Save_report_button.Location = new System.Drawing.Point(893, 306);
             this.Save_report_button.Name = "Save_report_button";
             this.Save_report_button.Size = new System.Drawing.Size(190, 42);
             this.Save_report_button.TabIndex = 10;
-            this.Save_report_button.Text = "Save report";
+            this.Save_report_button.Text = "Save report (XML)";
             this.Save_report_button.UseVisualStyleBackColor = true;
             this.Save_report_button.Click += new System.EventHandler(this.Save_report_button_Click);
+            // 
+            // Save_report_Excel
+            // 
+            this.Save_report_Excel.Location = new System.Drawing.Point(894, 354);
+            this.Save_report_Excel.Name = "Save_report_Excel";
+            this.Save_report_Excel.Size = new System.Drawing.Size(190, 43);
+            this.Save_report_Excel.TabIndex = 11;
+            this.Save_report_Excel.Text = "Save report (Excel)";
+            this.Save_report_Excel.UseVisualStyleBackColor = true;
+            this.Save_report_Excel.Click += new System.EventHandler(this.Save_report_Excel_Click);
             // 
             // ProgramDebt
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1106, 602);
+            this.Controls.Add(this.Save_report_Excel);
             this.Controls.Add(this.Save_report_button);
             this.Controls.Add(this.Select_button);
             this.Controls.Add(this.Search_button);
@@ -182,6 +194,7 @@
         private System.Windows.Forms.Button Search_button;
         private System.Windows.Forms.Button Select_button;
         private System.Windows.Forms.Button Save_report_button;
+        private System.Windows.Forms.Button Save_report_Excel;
     }
 }
 

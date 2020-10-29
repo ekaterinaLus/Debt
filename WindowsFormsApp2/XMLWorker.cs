@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -11,6 +14,16 @@ namespace WindowsFormsApp2
         {
             try
             {
+                List<string> columnName = new List<string>(); //хранит числовые столбцы
+
+                for (int i = 0; i < dataGridView1.Columns.Count; i++)
+                {
+                    string numericPart = Regex.Match(dataGridView1.Columns[i].Name, "\\d+").Value.ToString();
+                    columnName.Add(numericPart);
+                }
+
+                var totalAmount = new List<KeyValuePair<string, decimal?>>();
+
                 XmlDocument xDoc = new XmlDocument();
 
                 XmlDeclaration xmlDec = xDoc.CreateXmlDeclaration("1.0", "WINDOWS-1251", null);
@@ -36,37 +49,56 @@ namespace WindowsFormsApp2
                 foreach (DataGridViewRow row in dataGridView1.Rows)
                 {
                     XmlElement dataElement = xDoc.CreateElement("Data");
+                    DataGridViewCellCollection reverseCells = row.Cells;
 
-                    foreach (DataGridViewCell cell in row.Cells)
+                    //for (int i = reverseCells.Count - 1; i > 2 & i <= reverseCells.Count - 1; i--)
+                    for (int i = 3; i <= reverseCells.Count - 1; i++)
                     {
-                        if (cell.Value != null)
+                        if (reverseCells[i].Value != null)
                         {
-                            string celllValue = cell.Value.ToString().Trim();
+                            string celllValue = reverseCells[i].Value.ToString().Trim();
+                            string nameAttribute = null;
                             bool isAllZeros = celllValue.Where(x => char.IsDigit(x))
                                                     .All(x => x == '0');
-                            if (!isAllZeros)
+                            if (!isAllZeros || reverseCells[i].ColumnIndex == 4) // КОСГУ из столбца D все равно добавляем, даже если равно нулю
                             {
-                                if (cell.ColumnIndex == 3) //1в
+                                if (reverseCells[i].ColumnIndex == 3) //1в
                                 {
-                                    dataElement.SetAttribute("СинтСчёт", celllValue);
+                                    nameAttribute = "СинтСчёт";
+                                    dataElement.SetAttribute(nameAttribute, celllValue);
                                 }
 
-                                if (cell.ColumnIndex == 4) //1г
+                                if (reverseCells[i].ColumnIndex == 4) //1г
                                 {
+                                    nameAttribute = "КОСГУ";
                                     dataElement.SetAttribute("КОСГУ", celllValue);
                                 }
 
-                                if (cell.ColumnIndex != 4 & cell.ColumnIndex != 3 & cell.ColumnIndex != 0)
+                                if (reverseCells[i].ColumnIndex != 4 & reverseCells[i].ColumnIndex != 3 & reverseCells[i].ColumnIndex != 0)
                                 {
-                                    dataElement.SetAttribute("_x" + cell.ColumnIndex.ToString(), celllValue);
+                                    nameAttribute = "_x" + columnName[i].ToString();
+                                    dataElement.SetAttribute(nameAttribute, celllValue);
                                 }
+
+                                totalAmount.Add(new KeyValuePair<string, decimal?>(nameAttribute, Convert.ToDecimal(celllValue)));
                             }
                         }
                     }
 
-                    var t = row.Index;
                     rootElement.AppendChild(dataElement);
                 }
+
+                var resultDic = totalAmount.GroupBy(groupElem => groupElem.Key)
+                                                .ToDictionary(key => key.Key, value => value.Sum(z => z.Value));
+
+                XmlElement totalElement = xDoc.CreateElement("TOTAL");
+
+                foreach (var elem in resultDic)
+                {
+                    totalElement.SetAttribute(elem.Key, elem.Value.ToString());
+                }
+
+                rootElement.AppendChild(totalElement);
 
                 xDoc.Save(path);
                 MessageBox.Show("XML файл успешно сохранен.", "Выполнено.");

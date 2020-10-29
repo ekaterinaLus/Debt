@@ -72,7 +72,7 @@ namespace WindowsFormsApp2
             {
                 string searchValue = textBoxSearch.Text.Trim();
                 d.DefaultView.RowFilter =
-                           $"(a like '{searchValue}%') or (b like '{searchValue}%') or (v like '{searchValue}%') or (g like '{searchValue}%')";
+                           $"(A like '{searchValue}%') or (B like '{searchValue}%') or (C like '{searchValue}%') or (D like '{searchValue}%')";
             }
         }
 
@@ -81,15 +81,22 @@ namespace WindowsFormsApp2
             DBHelper.SelectDB(myConnectionString, ds, dt, dataGridView1);
         }
 
+
         private void Save_report_button_Click(object sender, EventArgs e)
         {
-            string path = FileService.SaveFile();
+            string path = FileService.SaveFile("xml");
             dataGridView1.CreaterXML(path);      
         }
 
         private void Save_button_Click(object sender, EventArgs e)
         {
             DBHelper.UpdateDB(myConnectionString, dataGridView1);
+        }
+
+        private void Save_report_Excel_Click(object sender, EventArgs e)
+        {
+            string path = FileService.SaveFile("xlsx");
+            ExcelWorker.CreateExcel(path);
         }
     }
 }
