@@ -35,7 +35,7 @@ namespace WindowsFormsApp2
 
         private void Add_button_Click(object sender, System.EventArgs e)
         {
-            DataRow row = ds.Tables[0].NewRow(); 
+            DataRow row = ds.Tables[0].NewRow();
             ds.Tables[0].Rows.Add(row);
         }
 
@@ -45,10 +45,12 @@ namespace WindowsFormsApp2
             {
                 try
                 {
+                    var rowDelete = Convert.ToInt32(dg.Cells[0].Value);
+                    DBHelper.DeletetDB(myConnectionString, rowDelete);
                     dataGridView1.Rows.Remove(dg);
                 }
 
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
                 }
@@ -72,7 +74,7 @@ namespace WindowsFormsApp2
             {
                 string searchValue = textBoxSearch.Text.Trim();
                 d.DefaultView.RowFilter =
-                           $"(a like '{searchValue}%') or (b like '{searchValue}%') or (v like '{searchValue}%') or (g like '{searchValue}%')";
+                           $"(A like '{searchValue}%') or (B like '{searchValue}%') or (C like '{searchValue}%') or (D like '{searchValue}%')";
             }
         }
 
@@ -81,15 +83,22 @@ namespace WindowsFormsApp2
             DBHelper.SelectDB(myConnectionString, ds, dt, dataGridView1);
         }
 
-        private void Save_report_button_Click(object sender, EventArgs e)
+
+        private void Save_report_XML_button_Click(object sender, EventArgs e)
         {
-            string path = FileService.SaveFile();
-            dataGridView1.CreaterXML(path);      
+            string path = FileService.SaveFile("xml");
+            dataGridView1.CreaterXML(path);
         }
 
         private void Save_button_Click(object sender, EventArgs e)
         {
             DBHelper.UpdateDB(myConnectionString, dataGridView1);
+        }
+
+        private void Save_report_Excel_Click(object sender, EventArgs e)
+        {
+            string path = FileService.SaveFile("xlsx");
+            dataGridView1.CreateExcel(path);
         }
     }
 }

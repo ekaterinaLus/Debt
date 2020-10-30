@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace WindowsFormsApp2
@@ -154,6 +155,28 @@ namespace WindowsFormsApp2
                             $func$  LANGUAGE plpgsql;";
 
             CommandExecution(connectionString, queryString);
+        }
+
+        public static void DeletetDB(string connectionString, int id)
+        {
+            try
+            {
+                string queryString = $" DELETE FROM \"{tableName}\" where Id = {id}";
+                CommandExecution(connectionString, queryString);
+            }
+
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        public static Dictionary<string, decimal?> SumValue(this List<KeyValuePair<string, decimal?>> list)
+        {
+            var result = list.GroupBy(groupElem => groupElem.Key)
+                                                .ToDictionary(key => key.Key, value => value.Sum(z => z.Value));
+            return result;
+
         }
 
         public static void CommandExecution(string connectionString, string query)
